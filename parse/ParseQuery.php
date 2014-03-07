@@ -1,6 +1,7 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class ParseQuery extends ParseRestClient{
+
 	private $_limit = 100;
 	private $_skip = 0;
 	private $_count = 0;
@@ -62,6 +63,7 @@ class ParseQuery extends ParseRestClient{
 			return $request;
 		}
 	}
+
 	//setting this to 1 by default since you'd typically only call this function if you were wanting to turn it on
   public function setCount($bool=1){
   	if(is_bool($bool)){
@@ -214,7 +216,6 @@ class ParseQuery extends ParseRestClient{
 	
 	}
 
-
 	public function whereContainedIn($key,$value){
 		if(isset($key) && isset($value)){
 			if(is_array($value)){
@@ -318,4 +319,3 @@ class ParseQuery extends ParseRestClient{
 	}
 }
 
-?>

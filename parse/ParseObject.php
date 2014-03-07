@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class ParseObject extends ParseRestClient{
 	public $_includes = array();
@@ -84,4 +84,3 @@ class ParseObject extends ParseRestClient{
 	}
 }
 
-?>

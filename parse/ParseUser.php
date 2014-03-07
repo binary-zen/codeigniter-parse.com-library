@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class ParseUser extends ParseRestClient{
 
@@ -184,4 +184,3 @@ public function socialLogin(){
 	
 }
 
-?>

@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+
 include 'parseConfig.php';
 include 'ParseObject.php';
 include 'ParseQuery.php';
@@ -21,12 +22,14 @@ class ParseRestClient{
 	public $returnData = '';
 
 	public function __construct(){
+        // Codeigniter specific stuff
         $ci =& get_instance();
         $ci->config->load('parse');
 		$this->_appid = $ci->config->item('parse_appid');
     	$this->_masterkey = $ci->config->item('parse_masterkey');
     	$this->_restkey = $ci->config->item('parse_restkey');
     	$this->_parseurl = $ci->config->item('parse_parseurl');
+        // end changes
 
 		if(empty($this->_appid) || empty($this->_restkey) || empty($this->_masterkey)){
 			$this->throwError('You must set your Application ID, Master Key and REST API Key');
@@ -218,4 +221,3 @@ class ParseLibraryException extends Exception{
 
 }
 
-?>

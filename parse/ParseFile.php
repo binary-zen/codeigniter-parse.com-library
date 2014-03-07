@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
 class ParseFile extends ParseRestClient{
 
@@ -42,8 +42,5 @@ class ParseFile extends ParseRestClient{
 		}
 	}
 
-
-
 }
 
-?>

@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+
 /*
 	// Adding the possibility to run parse cloud code functions
 	$cloud = new ParseCloud("functionName");
@@ -28,6 +29,7 @@ class ParseCloud extends ParseRestClient{
 	public function __set($name,$value){
 		$this->_options[$name] = $value;
 	}
+
 	public function run(){
 		if($this->_functionName != ''){
 			$request = $this->request(array(
@@ -38,6 +40,6 @@ class ParseCloud extends ParseRestClient{
 			return $request;
 		}
 	}
+
 }
 
-?>
