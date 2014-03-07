@@ -47,24 +47,25 @@ class ParseUser extends ParseRestClient{
 		else{
 			$this->throwError('username and password field are required for the login method');
 		}
-	
+
 	}
 
-public function socialLogin(){
-	if(!empty($this->authData)){
-		$request = $this->request( array(
-			'method' => 'POST',
-			'requestUrl' => 'users',
-			'data' => array(
-				'authData' => $this->authData
-			)
-		));
-		return $request;
-	}
-	else{
-		$this->throwError('authArray must be set use addAuthData method');
-	}
-}
+    public function socialLogin(){
+        if(!empty($this->authData)){
+            $request = $this->request( array(
+                'method' => 'POST',
+                'requestUrl' => 'users',
+                'data' => array(
+                    'authData' => $this->authData
+                )
+            ));
+            return $request;
+        }
+        else{
+            $this->throwError('authArray must be set use addAuthData method');
+        }
+
+    }
 
 	public function get($objectId){
 		if($objectId != ''){
@@ -79,8 +80,9 @@ public function socialLogin(){
 		else{
 			$this->throwError('objectId is required for the get method');
 		}
-		
+
 	}
+
 	//TODO: should make the parseUser contruct accept the objectId and update and delete would only require the sessionToken
 	public function update($objectId,$sessionToken){
 		if(!empty($objectId) || !empty($sessionToken)){
@@ -96,7 +98,7 @@ public function socialLogin(){
 		else{
 			$this->throwError('objectId and sessionToken are required for the update method');
 		}
-		
+
 	}
 
 	public function delete($objectId,$sessionToken){
@@ -112,7 +114,7 @@ public function socialLogin(){
 		else{
 			$this->throwError('objectId and sessionToken are required for the delete method');
 		}
-		
+
 	}
 	
 	public function addAuthData($authArray){
@@ -140,6 +142,7 @@ public function socialLogin(){
 		else{
 			$this->throwError('objectId and sessionToken are required for the linkAccounts method');
 		}		
+
 	}
 
 	public function unlinkAccount($objectId,$sessionToken,$type){
@@ -179,8 +182,7 @@ public function socialLogin(){
 			$this->throwError('email is required for the requestPasswordReset method');
 		}
 
-}
-
+    }
 	
 }
 
