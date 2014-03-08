@@ -1,68 +1,47 @@
-PHP parse.com API library
+PHP parse.com API library - Ported to a Codeigniter library
 ===========================
-More on the parse.com api here: https://www.parse.com/docs/rest
+This is a fork of apotropaic/parse.com-php-library that has been modified to easily integrate with the Codeigniter framework. It uses parse.com's rest api.
 
-### V1 is still available ###
-Availalbe here: https://github.com/apotropaic/parse.com-php-library/blob/parse.com-php-library_v1/README.md
+Why Codeigniter? I needed a php framework that had a wide range of server compatibility. The particular app that this was designed for will be going on a server at my university, where they are strict about what is installed.
 
-I wrote tests not for testing sake, but really just to see how I liked how the library worked!
-
-### Feedback Wanted ###
-
-This is a work in progress and is a drasticly different then v1 of this library.
-
-Let me know what you think and suggestions and ideas
+This library requires that the curl library for php be installed.
 
 
 SETUP
 =========================
 
-**Instructions** after cloning this repository you have to create a file in the root of it called **parseConfig.php**
+**Instructions** Create a new config file called parse.php and place it in the application/config directory of your application.
 
-### sample of parseConfig.php ###
+### sample of parse.php ###
 
-Below is what you want parseConfig.php to look like, just fill in your IDs and KEYs to get started.
+Fill in the appropriate keys. An exception will be thrown if they are not set.
 
 ```
 <?php
-
-class parseConfig{
-	
-	const APPID = '';
-	const MASTERKEY = '';
-	const RESTKEY = '';
-	const PARSEURL = 'https://api.parse.com/1/';
-}
+/**
+ * Parse keys
+ */
+ 
+$config['parse_appid'] = '';
+$config['parse_masterkey'] = '';
+$config['parse_restkey'] = '';
+$config['parse_parseurl'] = 'https://api.parse.com/1/';
 
 ?>
 
+
 ```
 
 
 
-EXAMPLE
+EXAMPLES
 =========================
 
-### sample of upload.php ###
+### Using ParseObject ###
 
 ```
-<?php 
-    //This example is a sample video upload stored in parse
-    
-    $parse = new parseObject('Videos');
-    $parse->title = $data['upload_data']['title'];
-    $parse->description = $data['upload_data']['description'];
-    $parse->tags = $data['upload_data']['tags'];
-    
-    //create new geo
-    $geo = new parseGeoPoint($data['upload_data']['lat'],$data['upload_data']['lng']);
-    $parse->location = $geo->location;
-    
-    //use pointer to other class
-    $parse->userid = array("__type" => "Pointer", "className" => "_User", "objectId" => $data['upload_data']['userid']);
-    
-    //create acl
-    $parse->ACL = array("*" => array("write" => true, "read" => true));
-    $r = $parse->save();
-    ?>
+      $this->load->library('parse');
+      $testObj = $this->parse->newParseObject('testObj');
+      $testObj->data = array("testcol" => "it works");
+      $testObj->save();
 ```
