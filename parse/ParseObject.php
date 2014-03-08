@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
-include_once 'ParseRestClient.php'
+include_once 'ParseRestClient.php';
 
 class ParseObject extends ParseRestClient{
 

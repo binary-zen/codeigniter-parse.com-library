@@ -1,15 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
-include 'parseConfig.php';
-include 'ParseObject.php';
-include 'ParseQuery.php';
-include 'ParseUser.php';
-include 'ParseFile.php';
-include 'ParsePush.php';
-include 'ParseGeoPoint.php';
-include 'ParseACL.php';
-include 'ParseCloud.php';
-
 class ParseRestClient{
 
 	private $_appid = '';

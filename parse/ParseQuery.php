@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
+include_once 'ParseRestClient.php';
+
 class ParseQuery extends ParseRestClient{
 
 	private $_limit = 100;

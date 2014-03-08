@@ -1,19 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
-/* 
-// example: 
-$object = new ParseObject();
-$object->__set('hello','world');
-
-// This instantiates a ACL object with NO rights! 
-$acl = new ParseACL();
-$acl->setPublicReadAccess(false);
-$acl->setReadAccessForId('user_id',true);
-$acl->setWriteAccessForRole('role_name',true);
-
-$object->ACL($acl);
-$object->save();
-*/
 class ParseACL{
 
 	public $acl;

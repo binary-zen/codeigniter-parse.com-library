@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
+include_once 'ParseRestClient.php';
+
 class ParsePush extends ParseRestClient{
 
 	public $channels;
