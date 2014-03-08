@@ -4,23 +4,21 @@ include_once 'ParseRestClient.php';
 
 class ParseUser extends ParseRestClient{
 
-	public $authData;
+	public $authData;   //?
 
-	public function __set($name,$value){
+    //?
+	public function __set($name, $value){
 		$this->data[$name] = $value;
 	}
 
-	public function signup($username='',$password=''){
-		if($username != '' && $password != ''){
-			$this->username = $username;
-			$this->password = $password;
-		}
-
-		if($this->data['username'] != '' && $this->data['password'] != ''){
+    //TODO make more general?
+	public function signup($username='',$password='', $email=''){
+		if($username != '' && $password != '' && $email != ''){
 			$request = $this->request(array(
 				'method' => 'POST',
 	    		'requestUrl' => 'users',
-				'data' => $this->data
+				'data' => array('username' => $username, 'password' => $password,
+                    'email' => $email)
 			));
 			
 	    	return $request;
@@ -32,14 +30,14 @@ class ParseUser extends ParseRestClient{
 		
 	}
 
-	public function login(){
-		if(!empty($this->data['username']) || !empty($this->data['password'])	){
+	public function login($username, $password){
+		if(!empty($username) || !empty($password)	){
 			$request = $this->request(array(
 				'method' => 'GET',
 	    		'requestUrl' => 'login',
 		    	'data' => array(
-		    		'password' => $this->data['password'],
-		    		'username' => $this->data['username']
+		    		'username' => $username,
+		    		'password' => $password
 		    	)
 			));
 			
@@ -52,6 +50,9 @@ class ParseUser extends ParseRestClient{
 
 	}
 
+    //TODO from here down, rewrite
+
+    //?
     public function socialLogin(){
         if(!empty($this->authData)){
             $request = $this->request( array(

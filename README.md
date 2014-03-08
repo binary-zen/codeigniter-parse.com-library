@@ -41,7 +41,7 @@ EXAMPLES
 
 ```
       $this->load->library('parse');
-      $testObj = $this->parse->newParseObject('testObj');
+      $testObj = $this->parse->ParseObject('testObj');
       $testObj->data = array("testcol" => "it works");
       $testObj->save();
 ```

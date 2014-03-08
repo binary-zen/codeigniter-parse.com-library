@@ -11,9 +11,14 @@ class Parse {
     public function __construct() {
     }
 
-    public function newParseObject($className) {
+    public function ParseObject($className) {
         include_once 'parse/ParseObject.php';
         return new ParseObject($className);
+    }
+
+    public function ParseUser() {
+        include_once 'parse/ParseUser.php';
+        return new ParseUser();
     }
 }
 
