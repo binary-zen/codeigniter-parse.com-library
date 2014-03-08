@@ -1,18 +1,22 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
+include_once 'ParseRestClient.php'
+
 class ParseObject extends ParseRestClient{
+
 	public $_includes = array();
 	private $_className = '';
 
-	public function __construct($class=''){
-		if($class != ''){
-			$this->_className = $class;
+	public function __construct($name){
+		parent::__construct();
+
+		if($name != ''){
+			$this->_className = $name;
 		}
 		else{
 			$this->throwError('include the className when creating a ParseObject');
 		}
 
-		parent::__construct();
 	}
 
 	public function __set($name,$value){
