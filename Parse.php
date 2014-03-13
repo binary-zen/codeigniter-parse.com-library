@@ -20,5 +20,10 @@ class Parse {
         include_once 'parse/ParseUser.php';
         return new ParseUser();
     }
+
+    public function ParseQuery($className) {
+        include_once 'parse/ParseQuery.php';
+        return new ParseQuery($className);
+    }
 }
 

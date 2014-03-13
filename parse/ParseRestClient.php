@@ -180,6 +180,7 @@ class ParseRestClient{
 		//TODO: Need to also check for response for a correct result from parse.com
 		if(!in_array($responseCode,$expectedCode)){
 			$error = json_decode($response);
+            //this line throws an error if there is no connection
 			$this->throwError($error->error,$error->code);
 		}
 		else{
