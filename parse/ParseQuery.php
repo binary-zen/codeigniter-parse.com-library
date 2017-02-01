@@ -4,7 +4,8 @@ include_once 'ParseRestClient.php';
 
 class ParseQuery extends ParseRestClient{
 
-	private $_limit = 100;
+	private $_default_limit = 100;
+	private $_limit = 100; // this must match _default_limit
 	private $_skip = 0;
 	private $_count = 0;
 	private $_order = array();
@@ -12,7 +13,7 @@ class ParseQuery extends ParseRestClient{
 	private $_include = array();
 
 	public function __construct($class='') {
-		if($class == 'users' || $class == 'installation') {
+		if($class == 'users' || $class == 'installation' || $class == 'config') {
 			$this->_requestUrl = $class;
 		}
 		elseif($class != '') {
@@ -21,21 +22,19 @@ class ParseQuery extends ParseRestClient{
 		else {
 			$this->throwError('include the className when creating a ParseQuery');
 		}
-		
 		parent::__construct();
 
 	}
 
 	public function find() {
-		if(empty($this->_query)) {
-			$request = $this->request(array(
-				'method' => 'GET',
-				'requestUrl' => $this->_requestUrl
-			));
-
-			return $request;
-
-		} else {
+		if (
+			($this->_limit != $this->_default_limit)||
+			($this->_skip != 0)||
+			($this->_count != 0)||
+			!empty($this->_order)||
+			!empty($this->_query)||
+			!empty($this->_include)
+		){
 			$urlParams = array(
 				'where' => json_encode( $this->_query )
 			);
@@ -61,8 +60,13 @@ class ParseQuery extends ParseRestClient{
 				'urlParams' => $urlParams,
 			));
 
-			return $request;
+		} else {
+			$request = $this->request(array(
+				'method' => 'GET',
+				'requestUrl' => $this->_requestUrl
+			));
 		}
+		return $request;
 	}
 
 	public function getCount() {
@@ -72,7 +76,7 @@ class ParseQuery extends ParseRestClient{
 	}
 
 	//setting this to 1 by default since you'd typically only call this function if you were wanting to turn it on
-    public function setCount($bool=1) {
+    public function setCount($bool=true) {
         if(is_bool($bool)) {
   		    $this->_count = $bool;
   	    } else {
@@ -123,13 +127,13 @@ class ParseQuery extends ParseRestClient{
 			if(is_array($value)) {
 				$this->_query[$key] = array(
 					'$all' => $value
-				);		
+				);
 			} else {
-				$this->throwError('$value must be an array to check through');		
+				$this->throwError('$value must be an array to check through');
 			}
 		}	
 		else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -139,12 +143,12 @@ class ParseQuery extends ParseRestClient{
 			if(is_array($value)) {
 				$this->_query[$key] = array(
 					'$in' => $value
-				);		
+				);
 			} else {
-				$this->throwError('$value must be an array to check through');		
+				$this->throwError('$value must be an array to check through');
 			}
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -161,7 +165,7 @@ class ParseQuery extends ParseRestClient{
 		if(isset($key) && isset($value)) {
 			$this->_query[$key] = $value;
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	}
 
@@ -179,7 +183,7 @@ class ParseQuery extends ParseRestClient{
 				'$gt' => $value
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -190,7 +194,7 @@ class ParseQuery extends ParseRestClient{
 				'$gte' => $value
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -210,7 +214,7 @@ class ParseQuery extends ParseRestClient{
 				'className' => $className
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 		
 	}
@@ -221,7 +225,7 @@ class ParseQuery extends ParseRestClient{
 				'$lt' => $value
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -232,7 +236,34 @@ class ParseQuery extends ParseRestClient{
 				'$lte' => $value
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
+		}
+	
+	}
+
+	public function whereDateLessThanOrEqualTo($key,$value) {
+		if(isset($key) && isset($value)) {
+			$this->_query[$key] = array(
+				'$lte' => array(
+					"__type" => "Date",
+					"iso" => $value
+				)
+			);
+		} else {
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
+		}
+	}
+
+	public function whereDateGreaterThanOrEqualTo($key,$value) {
+		if(isset($key) && isset($value)) {
+			$this->_query[$key] = array(
+				'$gte' => array(
+					"__type" => "Date",
+					"iso" => $value
+				)
+			);
+		} else {
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -242,12 +273,12 @@ class ParseQuery extends ParseRestClient{
 			if(is_array($value)) {
 				$this->_query[$key] = array(
 					'$nin' => $value
-				);		
+				);
 			} else {
-				$this->throwError('$value must be an array to check through');		
+				$this->throwError('$value must be an array to check through');
 			}
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	
 	}
@@ -258,7 +289,7 @@ class ParseQuery extends ParseRestClient{
 				'$ne' => $value
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 	}
 
@@ -269,7 +300,7 @@ class ParseQuery extends ParseRestClient{
 				'className' => $className
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 		
 	}
@@ -277,7 +308,7 @@ class ParseQuery extends ParseRestClient{
 		if(isset($key) && isset($className)) {
 			$this->_query[$key] = $this->dataType('pointer', array($className,$objectId));
 		} else {
-			$this->throwError('the $key and $className parameters must be set when setting a "where" pointer query method');		
+			$this->throwError('the $key and $className parameters must be set when setting a "where" pointer query method');
 		}
 		
 	}
@@ -292,7 +323,7 @@ class ParseQuery extends ParseRestClient{
 				$this->_query[$key]['options'] = $options;
 			}
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');		
+			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 		
 	}

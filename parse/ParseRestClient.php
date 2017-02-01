@@ -54,7 +54,13 @@ class ParseRestClient{
 			));
 			$isFile = true;
 		}
-		else if(substr($args['requestUrl'],0,5) == 'users' && isset($args['sessionToken'])){
+		else if(
+			(
+				(substr($args['requestUrl'],0,5) == 'users') ||
+				(substr($args['requestUrl'],0,8) == 'sessions') ||
+				(substr($args['requestUrl'],0,20) == 'requestPasswordReset')
+			)&& 
+			isset($args['sessionToken'])){
 			curl_setopt($c, CURLOPT_HTTPHEADER, array(
     			'Content-Type: application/json',
     			'X-Parse-Application-Id: '.$this->_appid,
@@ -80,7 +86,6 @@ class ParseRestClient{
 			else{
 				$postData = json_encode($args['data']);
 			}
-			
 			curl_setopt($c, CURLOPT_POSTFIELDS, $postData );
 		}
 
@@ -108,10 +113,17 @@ class ParseRestClient{
 
 		//BELOW HELPS WITH DEBUGGING		
 		/*
-		if(!in_array($responseCode,$expectedCode)){
-			//print_r($response);
-			//print_r($args);		
-		}
+		//if(!in_array($responseCode,$expectedCode)){
+			//////////////////////////////////////////////////
+			ob_start();
+			var_dump($args);
+			var_dump($url);
+			var_dump($response);
+			var_dump($args);
+			$varDumpResult = ob_get_clean();
+			echo "<br><br><br>" . $varDumpResult . "<br>";
+			//////////////////////////////////////////////////
+		//}
 		*/
 		return $this->checkResponse($response,$responseCode,$expectedCode);
 	}

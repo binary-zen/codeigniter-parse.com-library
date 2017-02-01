@@ -25,8 +25,13 @@ class ParseObject extends ParseRestClient{
 		}
 	}
 
-	public function save(){
+	public function create(){
 		if(count($this->data) > 0 && $this->_className != ''){
+			$request = $this->request(array(
+				'method' => 'POST',
+				'requestUrl' => 'classes/'.$this->_className,
+				'data' => $this->data,
+			));
 			$request = $this->request(array(
 				'method' => 'POST',
 				'requestUrl' => 'classes/'.$this->_className,
@@ -36,12 +41,19 @@ class ParseObject extends ParseRestClient{
 		}
 	}
 
-	public function get($id){
-		if($this->_className != '' || !empty($id)){
-			$request = $this->request(array(
-				'method' => 'GET',
-				'requestUrl' => 'classes/'.$this->_className.'/'.$id
-			));
+	public function get($id=''){
+		if($this->_className != ''){
+			if (!empty($id)){
+				$request = $this->request(array(
+					'method' => 'GET',
+					'requestUrl' => 'classes/'.$this->_className.'/'.$id
+				));
+			} else {
+				$request = $this->request(array(
+					'method' => 'GET',
+					'requestUrl' => 'classes/'.$this->_className
+				));
+			}
 			
 			if(!empty($this->_includes)){
 				$request['include'] = implode(',', $this->_includes);
@@ -51,13 +63,21 @@ class ParseObject extends ParseRestClient{
 		}
 	}
 
-	public function update($id){
-		if($this->_className != '' || !empty($id)){
-			$request = $this->request(array(
-				'method' => 'PUT',
-				'requestUrl' => 'classes/'.$this->_className.'/'.$id,
-				'data' => $this->data,
-			));
+	public function update($id=''){
+		if($this->_className != ''){
+			if (!empty($id)){
+				$request = $this->request(array(
+					'method' => 'PUT',
+					'requestUrl' => 'classes/'.$this->_className.'/'.$id,
+					'data' => $this->data,
+				));			
+			} else {
+				$request = $this->request(array(
+					'method' => 'PUT',
+					'requestUrl' => 'classes/'.$this->_className,
+					'data' => $this->data,
+				));
+			}
 
 			return $request;
 		}
@@ -73,7 +93,7 @@ class ParseObject extends ParseRestClient{
 
 
 	public function delete($id){
-		if($this->_className != '' || !empty($id)){
+		if($this->_className != '' && !empty($id)){
 			$request = $this->request(array(
 				'method' => 'DELETE',
 				'requestUrl' => 'classes/'.$this->_className.'/'.$id

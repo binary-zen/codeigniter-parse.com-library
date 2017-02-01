@@ -29,7 +29,7 @@ class ParseUser extends ParseRestClient{
 	}
 
 	public function login($username, $password) {
-		if(!empty($username) || !empty($password)) {
+		if(!empty($username) && !empty($password)) {
 			$request = $this->request(array(
 				'method' => 'GET',
 	    		'requestUrl' => 'login',
@@ -49,7 +49,15 @@ class ParseUser extends ParseRestClient{
 
 	public function requestPasswordReset($email) {
 		if(!empty($email)) {
-			$this->email - $email;
+			$this->email = $email;
+			//////////////////////////////////////////////////
+			/*
+			ob_start();
+			var_dump($email);
+			$varDumpResult = ob_get_clean();
+			echo "<br><br><br>" . $varDumpResult . "<br>";
+			*/
+			//////////////////////////////////////////////////
 			$request = $this->request(array(
 			'method' => 'POST',
 			'requestUrl' => 'requestPasswordReset',
@@ -97,6 +105,34 @@ class ParseUser extends ParseRestClient{
         }
     }
 
+    public function deleteSessionToken($objectId, $sessionToken) {
+		if(!empty($objectId) || !empty($sessionToken)) {
+			$request = $this->request(array(
+				'method' => 'DELETE',
+				'requestUrl' => 'sessions/'.$objectId,
+	    		'sessionToken' => $sessionToken
+			));
+	    	return $request;
+		}
+		else{
+			$this->throwError('objectId and sessionToken are required for the delete method');
+		}
+    }
+
+    public function getSession($sessionToken) {
+		if(!empty($sessionToken)) {
+			$request = $this->request(array(
+				'method' => 'GET',
+				'requestUrl' => 'sessions/me',
+	    		'sessionToken' => $sessionToken
+			));
+	    	return $request;
+		}
+		else{
+			$this->throwError('sessionToken is required for the getSession method');
+		}
+    }
+
 	//TODO: should make the parseUser contruct accept the objectId and update and delete would only require the sessionToken
 	public function update($objectId,$sessionToken) {
 		if(!empty($objectId) || !empty($sessionToken)) {
@@ -106,7 +142,6 @@ class ParseUser extends ParseRestClient{
 	    		'sessionToken' => $sessionToken,
 				'data' => $this->data
 			));
-			
 	    	return $request;			
 		} else{
 			$this->throwError('objectId and sessionToken are required for the update method');
