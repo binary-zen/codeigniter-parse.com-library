@@ -64,7 +64,7 @@ class ParseObject extends ParseRestClient{
 	}
 
 	public function update($id=''){
-		if($this->_className != ''){
+		if(count($this->data) > 0 && $this->_className != ''){
 			if (!empty($id)){
 				$request = $this->request(array(
 					'method' => 'PUT',
