@@ -11,6 +11,7 @@ class ParseQuery extends ParseRestClient{
 	private $_order = array();
 	private $_query = array();
 	private $_include = array();
+	private $_select = "";//array();
 
 	public function __construct($class='') {
 		if($class == 'users' || $class == 'installation' || $class == 'config') {
@@ -33,7 +34,8 @@ class ParseQuery extends ParseRestClient{
 			($this->_count != 0)||
 			!empty($this->_order)||
 			!empty($this->_query)||
-			!empty($this->_include)
+			!empty($this->_include)||
+			!empty($this->_select)
 		){
 			$urlParams = array(
 				'where' => json_encode( $this->_query )
@@ -49,6 +51,9 @@ class ParseQuery extends ParseRestClient{
 			}
 			if(!empty($this->_skip)) {
 				$urlParams['skip'] = $this->_skip;
+			}
+			if(!empty($this->_select)) {
+				$urlParams['keys'] = $this->_select;
 			}
 			if($this->_count == 1) {
 				$urlParams['count'] = '1';
@@ -214,7 +219,7 @@ class ParseQuery extends ParseRestClient{
 				'className' => $className
 			);
 		} else {
-			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
+			$this->throwError('the $className and $key parameters must be set when setting a "where" query method');
 		}
 		
 	}
@@ -304,6 +309,7 @@ class ParseQuery extends ParseRestClient{
 		}
 		
 	}
+
 	public function wherePointer($key,$className,$objectId) {
 		if(isset($key) && isset($className)) {
 			$this->_query[$key] = $this->dataType('pointer', array($className,$objectId));
@@ -326,6 +332,22 @@ class ParseQuery extends ParseRestClient{
 			$this->throwError('the $key and $value parameters must be set when setting a "where" query method');
 		}
 		
+	}
+
+	public function whereSelect($fields){
+		if(!empty($fields)){
+			$ctr = 0;
+			foreach ($fields as $field){
+				$ctr++;
+				if ($ctr ==1 ){
+					$this->_select .= $field;
+				} else {
+					$this->_select .= ",".$field;
+				}
+			}
+		} else {
+			$this->throwError('the $fields array must be non-empty');
+		}
 	}
 
 }
