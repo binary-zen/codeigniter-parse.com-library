@@ -34,6 +34,14 @@ class ParseRestClient{
 
 	}
 
+	public function getParseRoot(){
+		return $this->_parseurl;
+	}
+
+	public function getAppId(){
+		return $this->_appid;
+	}
+
 	/*
 	 * All requests go through this function
 	 * 

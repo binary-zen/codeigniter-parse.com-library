@@ -44,5 +44,13 @@ class ParseFile extends ParseRestClient{
 		}
 	}
 
+	public function link($parseFileName){
+		if($parseFileName != ''){
+			return null;
+		} else {
+			return $this->getParseRoot().'files/'.$this->getAppId();
+		}
+	}
+
 }
 
