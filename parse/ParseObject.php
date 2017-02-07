@@ -60,8 +60,7 @@ class ParseObject extends ParseRestClient{
 					'urlParams' => $urlParams
 				));
 			}
-			var_dump($request);
-			
+			// var_dump($request);
 			return $request;
 		}
 	}
