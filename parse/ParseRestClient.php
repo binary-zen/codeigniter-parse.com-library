@@ -70,11 +70,11 @@ class ParseRestClient{
 			)&& 
 			isset($args['sessionToken'])){
 			curl_setopt($c, CURLOPT_HTTPHEADER, array(
-    			'Content-Type: application/json',
-    			'X-Parse-Application-Id: '.$this->_appid,
-    			'X-Parse-REST-API-Key: '.$this->_restkey,
-    			'X-Parse-Session-Token: '.$args['sessionToken']
-    		));
+				'Content-Type: application/json',
+				'X-Parse-Application-Id: '.$this->_appid,
+				'X-Parse-REST-API-Key: '.$this->_restkey,
+				'X-Parse-Session-Token: '.$args['sessionToken']
+			));
 		}
 		else{
 			curl_setopt($c, CURLOPT_HTTPHEADER, array(
@@ -82,7 +82,7 @@ class ParseRestClient{
 				'X-Parse-Application-Id: '.$this->_appid,
 				'X-Parse-REST-API-Key: '.$this->_restkey,
 				'X-Parse-Master-Key: '.$this->_masterkey
-			));	
+			));
 		}
 		curl_setopt($c, CURLOPT_CUSTOMREQUEST, $args['method']);
 		$url = $this->_parseurl . $args['requestUrl'];
@@ -90,6 +90,12 @@ class ParseRestClient{
 		if($args['method'] == 'PUT' || $args['method'] == 'POST'){
 			if($isFile){
 				$postData = $args['data'];
+				curl_setopt($c, CURLOPT_POST, 1);
+				curl_setopt($c, CURLOPT_BINARYTRANSFER, 1);
+				//curl_setopt($c, CURLOPT_SAFE_UPLOAD, 1);
+				//curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
+				//curl_setopt($c, CURLOPT_VERBOSE, 1); 
+				//curl_setopt($c, CURLOPT_RETURNTRANSFER, 1); 
 			}
 			else{
 				$postData = json_encode($args['data']);
@@ -127,13 +133,12 @@ class ParseRestClient{
 			var_dump($args);
 			var_dump($url);
 			var_dump($response);
-			var_dump($args);
 			$varDumpResult = ob_get_clean();
 			echo "<br><br><br>" . $varDumpResult . "<br>";
 			//////////////////////////////////////////////////
 		//}
 		*/
-		return $this->checkResponse($response,$responseCode,$expectedCode);
+		return $this->checkResponse($c, $response,$responseCode,$expectedCode);
 	}
 
 	public function dataType($type,$params){
@@ -196,11 +201,20 @@ class ParseRestClient{
 		throw new ParseLibraryException($msg,$code);
 	}
 
-	private function checkResponse($response,$responseCode,$expectedCode){
+	private function checkResponse($c, $response,$responseCode,$expectedCode){
 		//TODO: Need to also check for response for a correct result from parse.com
+
 		if(!in_array($responseCode,$expectedCode)){
+			/*var_dump(curl_getinfo($c));
+			var_dump(curl_error($c));
+			var_dump($response);
+			var_dump($responseCode);
+			var_dump($expectedCode);
+			die();
+			*/
 			$error = json_decode($response);
-            //this line throws an error if there is no connection
+			//var_dump($error);die();
+			//this line throws an error if there is no connection
 			$this->throwError($error->error,$error->code);
 		}
 		else{
