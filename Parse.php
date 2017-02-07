@@ -26,9 +26,9 @@ class Parse {
         return new ParseQuery($className);
     }
 
-    public function ParseFile() {
+    public function ParseFile($contentType,$data) {
         include_once 'parse/ParseFile.php';
-        return new ParseFile();
+        return new ParseFile($contentType,$data);
     }
 }
 
