@@ -32,11 +32,6 @@ class ParseObject extends ParseRestClient{
 				'requestUrl' => 'classes/'.$this->_className,
 				'data' => $this->data,
 			));
-			$request = $this->request(array(
-				'method' => 'POST',
-				'requestUrl' => 'classes/'.$this->_className,
-				'data' => $this->data,
-			));
 			return $request;
 		}
 	}
